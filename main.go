@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"errors"
 	"fmt"
@@ -11,6 +12,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	_ "embed"
 
 	goutils "go.viam.com/utils"
 	"golang.org/x/exp/maps"
@@ -23,6 +26,14 @@ import (
 	"go.viam.com/rdk/pointcloud"
 	"go.viam.com/rdk/resource"
 	"go.viam.com/rdk/rimage/transform"
+)
+
+var (
+	//go:embed pcds/small.pcd
+	smallPCDBytes []byte
+
+	//go:embed pcds/large.pcd
+	bigPCDBytes []byte
 )
 
 var imageTypes = map[string]bool{
@@ -116,6 +127,7 @@ func newCam(
 
 	return &fake{
 		Named:       named,
+		big:         c.Big,
 		logger:      logger,
 		clockDrawer: &cd,
 	}, nil
@@ -139,7 +151,10 @@ func (f *fake) Images(ctx context.Context) ([]camera.NamedImage, resource.Respon
 }
 
 func (f *fake) NextPointCloud(ctx context.Context) (pointcloud.PointCloud, error) {
-	return nil, nil
+	if f.big {
+		return pointcloud.ReadPCD(bytes.NewBuffer(bigPCDBytes))
+	}
+	return pointcloud.ReadPCD(bytes.NewBuffer(smallPCDBytes))
 }
 
 func (f *fake) Projector(ctx context.Context) (transform.Projector, error) {
