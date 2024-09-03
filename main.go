@@ -151,10 +151,12 @@ func (f *fake) Images(ctx context.Context) ([]camera.NamedImage, resource.Respon
 }
 
 func (f *fake) NextPointCloud(ctx context.Context) (pointcloud.PointCloud, error) {
+	f.mu.Lock()
+	defer f.mu.Unlock()
 	if f.big {
-		return pointcloud.ReadPCD(bytes.NewBuffer(bigPCDBytes))
+		return pointcloud.ReadPCD(bytes.NewReader(bigPCDBytes))
 	}
-	return pointcloud.ReadPCD(bytes.NewBuffer(smallPCDBytes))
+	return pointcloud.ReadPCD(bytes.NewReader(smallPCDBytes))
 }
 
 func (f *fake) Projector(ctx context.Context) (transform.Projector, error) {
