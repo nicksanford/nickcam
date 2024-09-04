@@ -98,7 +98,8 @@ type s struct {
 }
 
 func (s *s) Next(ctx context.Context) (image.Image, func(), error) {
-	return s.clockDrawer.Image("image time: " + time.Now().Format(time.RFC3339Nano)), nil, nil
+	img, err := s.clockDrawer.Image("image time: " + time.Now().Format(time.RFC3339Nano))
+	return img, nil, err
 }
 
 func (s *s) Close(ctx context.Context) error {
@@ -138,11 +139,17 @@ func (f *fake) Images(ctx context.Context) ([]camera.NamedImage, resource.Respon
 	defer f.mu.Unlock()
 	ts1 := time.Now()
 	nowStr1 := ts1.Format(time.RFC3339Nano)
-	img1 := f.clockDrawer.Image("images1 time: " + nowStr1)
+	img1, err := f.clockDrawer.Image("images1 time: " + nowStr1)
+	if err != nil {
+		return nil, resource.ResponseMetadata{}, err
+	}
 
 	ts2 := time.Now()
 	nowStr2 := ts1.Format(time.RFC3339Nano)
-	img2 := f.clockDrawer.Image("images2 time: " + nowStr1)
+	img2, err := f.clockDrawer.Image("images2 time: " + nowStr2)
+	if err != nil {
+		return nil, resource.ResponseMetadata{}, err
+	}
 
 	return []camera.NamedImage{
 		{Image: img1, SourceName: nowStr1 + f.clockDrawer.Ext()},

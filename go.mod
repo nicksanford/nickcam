@@ -3,7 +3,7 @@ module github.com/nicksanford/boomsensor
 go 1.21.13
 
 require (
-	github.com/nicksanford/imageclock v0.0.0-20240903201045-0c1aa5096e28
+	github.com/nicksanford/imageclock v0.0.0-20240904204053-b5e164162c06
 	go.viam.com/rdk v0.39.0
 	go.viam.com/utils v0.1.97
 	golang.org/x/exp v0.0.0-20230725012225-302865e7556b

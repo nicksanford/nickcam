@@ -743,8 +743,8 @@ github.com/nbutton23/zxcvbn-go v0.0.0-20201221231540-e56b841a3c88/go.mod h1:KSVJ
 github.com/nbutton23/zxcvbn-go v0.0.0-20210217022336-fa2cb2858354/go.mod h1:KSVJerMDfblTH7p5MZaTt+8zaT2iEk3AkVb9PQdZuE8=
 github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646 h1:zYyBkD/k9seD2A7fsi6Oo2LfFZAehjjQMERAvZLEDnQ=
 github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646/go.mod h1:jpp1/29i3P1S/RLdc7JQKbRpFeM1dOBd8T9ki5s+AY8=
-github.com/nicksanford/imageclock v0.0.0-20240903201045-0c1aa5096e28 h1:t782Ga3MMLtJSs9YzJoi3I7jeiX2xvaJsuEruHkbmg4=
-github.com/nicksanford/imageclock v0.0.0-20240903201045-0c1aa5096e28/go.mod h1:EVNm2e/im+U1oUpkfSkm9IBRC1N14uG0iDwNFgxgH2U=
+github.com/nicksanford/imageclock v0.0.0-20240904204053-b5e164162c06 h1:7eulvrp7bEYXtP2S+RJTk6F4awzTOYQmT2O5FPJP5ls=
+github.com/nicksanford/imageclock v0.0.0-20240904204053-b5e164162c06/go.mod h1:5TqbvTRB7vsvSucbrMqOeKHq/Qmsnl6751ITUPdZ050=
 github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e/go.mod h1:zD1mROLANZcx1PVRCS0qkT7pwLkGfwJo4zjcN/Tysno=
 github.com/nishanths/exhaustive v0.1.0/go.mod h1:S1j9110vxV1ECdCudXRkeMnFQ/DQk9ajLT0Uf2MYZQQ=
 github.com/nishanths/predeclared v0.0.0-20190419143655-18a43bb90ffc/go.mod h1:62PewwiQTlm/7Rj+cxVYqZvDIUc+JjZq6GHAC1fsObQ=
