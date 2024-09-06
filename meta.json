@@ -1,0 +1,22 @@
+{
+  "$schema": "https://dl.viam.dev/module.schema.json",
+  "module_id": "ncs:nickcam",
+  "visibility": "public",
+  "url": "https://github.com/nicksanford/nickcam",
+  "description": "example camera",
+  "models": [
+    {
+      "api": "rdk:component:camera",
+      "model": "ncs:camera:nickcam"
+    }
+  ],
+  "build": {
+    "build": "make module",
+    "path": "module.tar.gz",
+    "arch": [
+      "linux/amd64",
+      "linux/arm64"
+    ]
+  },
+  "entrypoint": "bin/nickcam"
+}
