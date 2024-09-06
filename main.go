@@ -95,9 +95,12 @@ func (c *Config) Validate(path string) ([]string, error) {
 
 type s struct {
 	clockDrawer *clockdrawer.ClockDrawer
+	logger      logging.Logger
 }
 
 func (s *s) Next(ctx context.Context) (image.Image, func(), error) {
+	s.logger.Debug("GetImage (NEXT) START")
+	defer s.logger.Debug("GetImage (NEXT) END")
 	img, err := s.clockDrawer.Image("image time: " + time.Now().Format(time.RFC3339Nano))
 	return img, nil, err
 }
@@ -107,7 +110,7 @@ func (s *s) Close(ctx context.Context) error {
 }
 
 func (f *fake) newStream() gostream.MediaStream[image.Image] {
-	return &s{f.clockDrawer}
+	return &s{clockDrawer: f.clockDrawer, logger: f.logger}
 }
 
 func newCam(
@@ -137,6 +140,8 @@ func newCam(
 func (f *fake) Images(ctx context.Context) ([]camera.NamedImage, resource.ResponseMetadata, error) {
 	f.mu.Lock()
 	defer f.mu.Unlock()
+	f.logger.Debug("GetImages START")
+	defer f.logger.Debug("GetImages END")
 	ts1 := time.Now()
 	nowStr1 := ts1.Format(time.RFC3339Nano)
 	img1, err := f.clockDrawer.Image("images1 time: " + nowStr1)
@@ -160,6 +165,8 @@ func (f *fake) Images(ctx context.Context) ([]camera.NamedImage, resource.Respon
 func (f *fake) NextPointCloud(ctx context.Context) (pointcloud.PointCloud, error) {
 	f.mu.Lock()
 	defer f.mu.Unlock()
+	f.logger.Debug("NextPointCloud START")
+	defer f.logger.Debug("NextPointCloud END")
 	if f.big {
 		return pointcloud.ReadPCD(bytes.NewReader(bigPCDBytes))
 	}
@@ -167,16 +174,22 @@ func (f *fake) NextPointCloud(ctx context.Context) (pointcloud.PointCloud, error
 }
 
 func (f *fake) Projector(ctx context.Context) (transform.Projector, error) {
+	f.logger.Debug("Projector START")
+	defer f.logger.Debug("Projector END")
 	return nil, errors.New("Projector unimplemented")
 }
 
 func (f *fake) Properties(ctx context.Context) (camera.Properties, error) {
+	f.logger.Debug("Properties START")
+	defer f.logger.Debug("Properties END")
 	return camera.Properties{SupportsPCD: true}, nil
 }
 
 func (f *fake) Stream(ctx context.Context, eh ...gostream.ErrorHandler) (gostream.MediaStream[image.Image], error) {
 	f.mu.Lock()
 	defer f.mu.Unlock()
+	f.logger.Debug("Stream START")
+	defer f.logger.Debug("Stream END")
 	return f.newStream(), nil
 }
 

@@ -1,9 +1,9 @@
-module github.com/nicksanford/boomsensor
+module github.com/nicksanford/nickcam
 
 go 1.21.13
 
 require (
-	github.com/nicksanford/imageclock v0.0.0-20240904204053-b5e164162c06
+	github.com/nicksanford/imageclock v0.0.0-20240904212042-acc6e8ded021
 	go.viam.com/rdk v0.39.0
 	go.viam.com/utils v0.1.97
 	golang.org/x/exp v0.0.0-20230725012225-302865e7556b
@@ -68,6 +68,7 @@ require (
 	github.com/jhump/protoreflect v1.15.1 // indirect
 	github.com/kellydunn/golang-geo v0.7.0 // indirect
 	github.com/klauspost/compress v1.16.5 // indirect
+	github.com/klauspost/cpuid/v2 v2.2.8 // indirect
 	github.com/kylelemons/go-gypsy v1.0.0 // indirect
 	github.com/lestrrat-go/backoff/v2 v2.0.8 // indirect
 	github.com/lestrrat-go/blackmagic v1.0.2 // indirect
@@ -129,7 +130,7 @@ require (
 	go.uber.org/zap v1.24.0 // indirect
 	go.viam.com/api v0.1.331 // indirect
 	go.viam.com/test v1.1.1-0.20220913152726-5da9916c08a2 // indirect
-	golang.org/x/arch v0.0.0-20210923205945-b76863e36670 // indirect
+	golang.org/x/arch v0.10.0 // indirect
 	golang.org/x/crypto v0.23.0 // indirect
 	golang.org/x/image v0.19.0 // indirect
 	golang.org/x/mod v0.17.0 // indirect
