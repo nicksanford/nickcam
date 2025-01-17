@@ -110,19 +110,6 @@ func (f *fake) newStream() gostream.MediaStream[image.Image] {
 	return &s{clockDrawer: f.clockDrawer, logger: f.logger}
 }
 
-func (f *fake) Image(ctx context.Context, mimeType string, extra map[string]interface{}) ([]byte, camera.ImageMetadata, error) {
-	f.logger.Debug("GetImage (NEXT) START")
-	defer f.logger.Debug("GetImage (NEXT) END")
-	img, err := f.clockDrawer.Image("image time: " + time.Now().Format(time.RFC3339Nano))
-	if err != nil {
-		return nil, camera.ImageMetadata{}, err
-	}
-	var b bytes.Buffer
-	if err := jpeg.Encode(&b, img, &jpeg.Options{Quality: 75}); err != nil {
-		return nil, camera.ImageMetadata{}, err
-	}
-	return b.Bytes(), camera.ImageMetadata{MimeType: utils.MimeTypeJPEG}, nil
-}
 func New(
 	ctx context.Context,
 	deps resource.Dependencies,
@@ -145,6 +132,20 @@ func New(
 		logger:      logger,
 		clockDrawer: &cd,
 	}, nil
+}
+
+func (f *fake) Image(ctx context.Context, mimeType string, extra map[string]interface{}) ([]byte, camera.ImageMetadata, error) {
+	f.logger.Debug("GetImage (NEXT) START")
+	defer f.logger.Debug("GetImage (NEXT) END")
+	img, err := f.clockDrawer.Image("image time: " + time.Now().Format(time.RFC3339Nano))
+	if err != nil {
+		return nil, camera.ImageMetadata{}, err
+	}
+	var b bytes.Buffer
+	if err := jpeg.Encode(&b, img, &jpeg.Options{Quality: 75}); err != nil {
+		return nil, camera.ImageMetadata{}, err
+	}
+	return b.Bytes(), camera.ImageMetadata{MimeType: utils.MimeTypeJPEG}, nil
 }
 
 func (f *fake) Images(ctx context.Context) ([]camera.NamedImage, resource.ResponseMetadata, error) {
