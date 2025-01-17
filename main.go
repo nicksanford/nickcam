@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/nicksanford/nickcam/nickcam"
+	"github.com/nicksanford/nickcam/passthroughcam"
 	goutils "go.viam.com/utils"
 
 	"go.viam.com/rdk/components/camera"
@@ -18,11 +19,20 @@ func mainWithArgs(ctx context.Context, args []string, logger logging.Logger) (er
 		nickcam.Model,
 		resource.Registration[camera.Camera, *nickcam.Config]{Constructor: nickcam.New})
 
-	module, err := module.NewModuleFromArgs(ctx, logger)
+	resource.RegisterComponent(
+		camera.API,
+		passthroughcam.Model,
+		resource.Registration[camera.Camera, *passthroughcam.Config]{Constructor: passthroughcam.New})
+
+	module, err := module.NewModuleFromArgs(ctx)
 	if err != nil {
 		return err
 	}
 	if err := module.AddModelFromRegistry(ctx, camera.API, nickcam.Model); err != nil {
+		return err
+	}
+
+	if err := module.AddModelFromRegistry(ctx, camera.API, passthroughcam.Model); err != nil {
 		return err
 	}
 
