@@ -2,6 +2,8 @@
 EXE_NAME = nickcam
 BIN_OUTPUT_PATH = bin/$(shell uname -s | tr '[:upper:]' '[:lower:]')-$(shell uname -m)
 
+all: clean $(BIN_OUTPUT_PATH)/$(EXE_NAME)
+
 $(BIN_OUTPUT_PATH)/$(EXE_NAME):
 	go build -o $(BIN_OUTPUT_PATH)/$(EXE_NAME)
 

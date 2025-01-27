@@ -5,7 +5,7 @@ go 1.23
 require (
 	github.com/nicksanford/imageclock v0.0.0-20240904212042-acc6e8ded021
 	go.viam.com/rdk v0.58.0
-	go.viam.com/utils v0.1.123
+	go.viam.com/utils v0.1.126
 	golang.org/x/exp v0.0.0-20240904232852-e7e105dedf7e
 )
 
@@ -156,7 +156,10 @@ require (
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240903143218-8af14fe29dc1 // indirect
 	google.golang.org/grpc v1.66.0 // indirect
 	google.golang.org/protobuf v1.35.1 // indirect
+	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
 	gopkg.in/square/go-jose.v2 v2.6.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	nhooyr.io/websocket v1.8.7 // indirect
 )
+
+replace go.viam.com/rdk => /Users/nicksanford/rdk

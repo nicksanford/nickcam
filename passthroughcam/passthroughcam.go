@@ -15,6 +15,7 @@ import (
 	"go.viam.com/rdk/pointcloud"
 	"go.viam.com/rdk/resource"
 	"go.viam.com/rdk/rimage/transform"
+	"google.golang.org/grpc/metadata"
 )
 
 var Model = resource.NewModel("ncs", "camera", "nickcam-passthrough")
@@ -73,19 +74,19 @@ func New(
 func (f *fake) SubscribeRTP(ctx context.Context, bufferSize int, packetsCB rtppassthrough.PacketCallback) (rtppassthrough.Subscription, error) {
 	f.logger.Info("SubscribeRTP START")
 	defer f.logger.Info("SubscribeRTP STOP")
-	return f.rtpPassthroughSource.SubscribeRTP(ctx, bufferSize, packetsCB)
+	return f.rtpPassthroughSource.SubscribeRTP(metadata.AppendToOutgoingContext(ctx, "calling_resource_name", f.Name().String()), bufferSize, packetsCB)
 }
 
 func (f *fake) Unsubscribe(ctx context.Context, id rtppassthrough.SubscriptionID) error {
 	f.logger.Info("Unsubscribe START")
 	defer f.logger.Info("Unsubscribe STOP")
-	return f.rtpPassthroughSource.Unsubscribe(ctx, id)
+	return f.rtpPassthroughSource.Unsubscribe(metadata.AppendToOutgoingContext(ctx, "calling_resource_name", f.Name().String()), id)
 }
 
 func (f *fake) Image(ctx context.Context, mimeType string, extra map[string]interface{}) ([]byte, camera.ImageMetadata, error) {
 	f.logger.Debug("GetImage (NEXT) START")
 	defer f.logger.Debug("GetImage (NEXT) END")
-	return f.cam.Image(ctx, mimeType, extra)
+	return nil, camera.ImageMetadata{}, errors.New("GetImage unimplemented")
 }
 
 func (f *fake) Images(ctx context.Context) ([]camera.NamedImage, resource.ResponseMetadata, error) {
