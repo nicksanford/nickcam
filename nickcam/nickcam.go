@@ -16,6 +16,7 @@ import (
 
 	_ "embed"
 
+	"go.opencensus.io/trace"
 	"golang.org/x/exp/maps"
 
 	"github.com/nicksanford/imageclock/clockdrawer"
@@ -25,6 +26,7 @@ import (
 	"go.viam.com/rdk/pointcloud"
 	"go.viam.com/rdk/resource"
 	"go.viam.com/rdk/rimage/transform"
+	"go.viam.com/rdk/spatialmath"
 	"go.viam.com/rdk/utils"
 )
 
@@ -80,17 +82,17 @@ type Config struct {
 	ImageType string `json:"image_type,omitempty"`
 }
 
-func (c *Config) Validate(path string) ([]string, error) {
+func (c *Config) Validate(path string) ([]string, []string, error) {
 
 	if _, ok := colors[c.Color]; !ok {
-		return nil, fmt.Errorf("config color %s invalid, valid colors: %s", c.Color, strings.Join(colorOptions, ", "))
+		return nil, nil, fmt.Errorf("config color %s invalid, valid colors: %s", c.Color, strings.Join(colorOptions, ", "))
 	}
 
 	if _, ok := imageTypes[c.ImageType]; !ok {
-		return nil, fmt.Errorf("config image_type %s invalid, valid image types: %s", c.ImageType, strings.Join(imageTypeOptions, ", "))
+		return nil, nil, fmt.Errorf("config image_type %s invalid, valid image types: %s", c.ImageType, strings.Join(imageTypeOptions, ", "))
 	}
 
-	return nil, nil
+	return nil, nil, nil
 }
 
 type s struct {
@@ -148,7 +150,7 @@ func (f *fake) Image(ctx context.Context, mimeType string, extra map[string]inte
 	return b.Bytes(), camera.ImageMetadata{MimeType: utils.MimeTypeJPEG}, nil
 }
 
-func (f *fake) Images(ctx context.Context) ([]camera.NamedImage, resource.ResponseMetadata, error) {
+func (f *fake) Images(ctx context.Context, filterSourceNames []string, extra map[string]interface{}) ([]camera.NamedImage, resource.ResponseMetadata, error) {
 	f.mu.Lock()
 	defer f.mu.Unlock()
 	f.logger.Debug("GetImages START")
@@ -166,22 +168,40 @@ func (f *fake) Images(ctx context.Context) ([]camera.NamedImage, resource.Respon
 	if err != nil {
 		return nil, resource.ResponseMetadata{}, err
 	}
-
+	namedImg1, err := camera.NamedImageFromImage(img1, nowStr1+f.clockDrawer.Ext(), utils.MimeTypeJPEG)
+	if err != nil {
+		return nil, resource.ResponseMetadata{}, err
+	}
+	namedImg2, err := camera.NamedImageFromImage(img2, nowStr2+f.clockDrawer.Ext(), utils.MimeTypeJPEG)
+	if err != nil {
+		return nil, resource.ResponseMetadata{}, err
+	}
 	return []camera.NamedImage{
-		{Image: img1, SourceName: nowStr1 + f.clockDrawer.Ext()},
-		{Image: img2, SourceName: nowStr2 + f.clockDrawer.Ext()},
+		namedImg1,
+		namedImg2,
 	}, resource.ResponseMetadata{CapturedAt: ts2}, nil
 }
 
-func (f *fake) NextPointCloud(ctx context.Context) (pointcloud.PointCloud, error) {
+func (f *fake) NextPointCloud(ctx context.Context, extra map[string]interface{}) (pointcloud.PointCloud, error) {
 	f.mu.Lock()
 	defer f.mu.Unlock()
+	myLogger := logging.NewLogger("nickCamNextPointCloud")
+	if span := trace.FromContext(ctx); span != nil {
+		traceID := span.SpanContext().TraceID.String()
+		myLogger.Infof("Trace ID: %s", traceID)
+	} else {
+		myLogger.Warn("No trace found in NextPointCloud")
+	}
 	f.logger.Debug("NextPointCloud START")
 	defer f.logger.Debug("NextPointCloud END")
 	if f.big {
-		return pointcloud.ReadPCD(bytes.NewReader(bigPCDBytes))
+		return pointcloud.ReadPCD(bytes.NewReader(bigPCDBytes), pointcloud.BasicType)
 	}
-	return pointcloud.ReadPCD(bytes.NewReader(smallPCDBytes))
+	return pointcloud.ReadPCD(bytes.NewReader(smallPCDBytes), pointcloud.BasicType)
+}
+
+func (f *fake) Geometries(context.Context, map[string]interface{}) ([]spatialmath.Geometry, error) {
+	return nil, nil
 }
 
 func (f *fake) Projector(ctx context.Context) (transform.Projector, error) {
