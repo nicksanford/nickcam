@@ -4,7 +4,6 @@ go 1.25.1
 
 require (
 	github.com/nicksanford/imageclock v0.0.0-20240904212042-acc6e8ded021
-	go.opencensus.io v0.24.0
 	go.viam.com/rdk v0.101.0
 	go.viam.com/utils v0.1.176
 	golang.org/x/exp v0.0.0-20241009180824-f66d83c29e7c
@@ -141,6 +140,7 @@ require (
 	github.com/ziutek/mymysql v1.5.4 // indirect
 	go-hep.org/x/hep v0.32.1 // indirect
 	go.mongodb.org/mongo-driver v1.17.1 // indirect
+	go.opencensus.io v0.24.0 // indirect
 	go.opentelemetry.io/auto/sdk v1.1.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.54.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.54.0 // indirect
