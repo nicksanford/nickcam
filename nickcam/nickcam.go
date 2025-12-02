@@ -16,7 +16,6 @@ import (
 
 	_ "embed"
 
-	"go.viam.com/utils/trace"
 	"golang.org/x/exp/maps"
 
 	"github.com/nicksanford/imageclock/clockdrawer"
@@ -185,13 +184,6 @@ func (f *fake) Images(ctx context.Context, filterSourceNames []string, extra map
 func (f *fake) NextPointCloud(ctx context.Context, extra map[string]interface{}) (pointcloud.PointCloud, error) {
 	f.mu.Lock()
 	defer f.mu.Unlock()
-	myLogger := logging.NewLogger("nickCamNextPointCloud")
-	if span := trace.FromContext(ctx); span != nil {
-		traceID := span.SpanContext().TraceID().String()
-		myLogger.Infof("Trace ID: %s", traceID)
-	} else {
-		myLogger.Warn("No trace found in NextPointCloud")
-	}
 	f.logger.Debug("NextPointCloud START")
 	defer f.logger.Debug("NextPointCloud END")
 	if f.big {
