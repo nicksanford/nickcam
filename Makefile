@@ -8,7 +8,7 @@ $(BIN_OUTPUT_PATH)/$(EXE_NAME):
 module: 
 	go build -o bin/$(EXE_NAME)
 	rm -rf module.tar.gz
-	tar czf module.tar.gz bin/$(EXE_NAME)
+	tar czf module.tar.gz meta.json bin/$(EXE_NAME)
 	rm bin/$(EXE_NAME)
 
 clean:
